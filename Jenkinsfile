@@ -15,7 +15,7 @@ pipeline {
         stage('Build Frontend Docker Image') {
             steps {
                 dir('frontend') {
-                    sh 'docker build -t shahidkhan232/frontend:latest .'
+                    sh """docker build -t shahidkhan232/frontend:latest ."""
                 }
             }
         }
@@ -23,7 +23,7 @@ pipeline {
         stage('Build Backend Docker Image') {
             steps {
                 dir('backend') {
-                    sh 'docker build -t shahidkhan232/backend:latest .'
+                    sh """docker build -t shahidkhan232/backend:latest ."""
                 }
             }
         }
@@ -31,11 +31,11 @@ pipeline {
         stage('Push Docker Images to DockerHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
+                    sh """
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push shahidkhan232/frontend:latest
                         docker push shahidkhan232/backend:latest
-                    '''
+                    """
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 sshagent(['ec2-ssh-key-id']) {
-                    sh '''
+                    sh """
                     ssh -o StrictHostKeyChecking=no ec2-user@54.167.116.168 <<EOF
                       docker pull shahidkhan232/frontend:latest
                       docker pull shahidkhan232/backend:latest
@@ -54,7 +54,7 @@ pipeline {
                       docker run -d --name frontend -p 80:3000 shahidkhan232/frontend:latest
                       docker run -d --name backend -p 5353:5353 shahidkhan232/backend:latest
                     EOF
-                    '''
+                    """
                 }
             }
         }
