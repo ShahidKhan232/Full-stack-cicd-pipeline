@@ -52,7 +52,7 @@ pipeline {
                       docker rm frontend backend || true
 
                       docker run -d --name frontend -p 80:3000 shahidkhan232/frontend:latest
-                      docker run -d --name backend -p 8080:8080 shahidkhan232/backend:latest
+                      docker run -d --name backend -p 5353:5353 shahidkhan232/backend:latest
                     EOF
                     '''
                 }
