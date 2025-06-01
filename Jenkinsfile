@@ -12,8 +12,8 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key-id']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no ec2-user@54.167.116.168 'rm -rf ~/therayu'
-                    scp -o StrictHostKeyChecking=no -r . ec2-user@54.167.116.168:/home/ec2-user/therayu
+                    ssh -o StrictHostKeyChecking=no ec2-user@3.85.62.197 'rm -rf ~/therayu'
+                    scp -o StrictHostKeyChecking=no -r . ec2-user@3.85.62.197:/home/ec2-user/therayu
                     """
                 }
             }
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key-id']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no ec2-user@54.167.116.168 <<EOF
+                    ssh -o StrictHostKeyChecking=no ec2-user@3.85.62.197 <<EOF
                       cd /home/ec2-user/therayu
                       docker-compose down || true
                       docker-compose up -d --build
