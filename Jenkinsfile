@@ -10,7 +10,7 @@ pipeline {
 
         stage('Transfer Latest Code to EC2') {
             steps {
-                sshagent(['ec2-ssh-key-id']) {
+                sshagent(credentials:['ec2-ssh-key-id']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ec2-user@3.85.62.197 'rm -rf ~/therayu'
                     scp -o StrictHostKeyChecking=no -r . ec2-user@3.85.62.197:/home/ec2-user/therayu
@@ -21,7 +21,7 @@ pipeline {
 
         stage('Deploy with Docker Compose') {
             steps {
-                sshagent(['ec2-ssh-key-id']) {
+                sshagent(credentials:['ec2-ssh-key-id']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ec2-user@3.85.62.197 <<EOF
                       cd /home/ec2-user/therayu
