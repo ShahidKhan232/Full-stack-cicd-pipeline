@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Debug SSH Agent') {
             steps {
-                sshagent(['ec2-user']) {
+                sshagent(credentials: ['ec2-ssh-key-id']) {
                     sh 'echo "SSH Agent running"; ssh-add -l'
                 }
             }
