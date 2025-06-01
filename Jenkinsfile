@@ -1,27 +1,26 @@
 pipeline {
     agent any
 
+    environment {
+        REMOTE_USER = 'ec2-user'
+        REMOTE_HOST = '44.202.156.216'
+        REMOTE_PATH = '/home/ec2-user/therayu'
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/ShahidKhan232/Therayu-cicd-pipeline.git', branch: 'main'
             }
         }
-        stage('Debug SSH Agent') {
-            steps {
-                sshagent(credentials: ['ec2-ssh-key-id']) {
-                    sh 'echo "SSH Agent running"; ssh-add -l'
-                }
-            }
-        }
-
 
         stage('Transfer Latest Code to EC2') {
             steps {
-                sshagent(credentials: ['ec2-ssh-key-id']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key-id', keyFileVariable: 'SSH_KEY')]) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@44.202.156.216 'rm -rf ~/therayu && mkdir -p ~/therayu'
-                        scp -o StrictHostKeyChecking=no -r . ec2-user@44.202.156.216:/home/ec2-user/therayu
+                        chmod 600 $SSH_KEY
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST 'rm -rf $REMOTE_PATH && mkdir -p $REMOTE_PATH'
+                        scp -i $SSH_KEY -o StrictHostKeyChecking=no -r . $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH
                     '''
                 }
             }
@@ -29,12 +28,13 @@ pipeline {
 
         stage('Deploy with Docker Compose') {
             steps {
-                sshagent(credentials: ['ec2-ssh-key-id']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key-id', keyFileVariable: 'SSH_KEY')]) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@44.202.156.216 <<EOF
-                          cd /home/ec2-user/therayu
-                          docker-compose down || true
-                          docker-compose up -d --build
+                        chmod 600 $SSH_KEY
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST <<EOF
+                            cd $REMOTE_PATH
+                            docker-compose down || true
+                            docker-compose up -d --build
                         EOF
                     '''
                 }
