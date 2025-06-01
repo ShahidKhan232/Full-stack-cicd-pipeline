@@ -12,8 +12,8 @@ pipeline {
             steps {
                 sshagent(credentials: ['ec2-ssh-key-id']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@44.202.156.216 'rm -rf ~/therayu'
-                    scp -o StrictHostKeyChecking=no -r . ec2-user@44.202.156.216:/home/ec2-user/therayu
+                        ssh -o StrictHostKeyChecking=no ec2-user@44.202.156.216 'rm -rf ~/therayu && mkdir -p ~/therayu'
+                        scp -o StrictHostKeyChecking=no -r . ec2-user@44.202.156.216:/home/ec2-user/therayu
                     '''
                 }
             }
@@ -23,11 +23,11 @@ pipeline {
             steps {
                 sshagent(credentials: ['ec2-ssh-key-id']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@44.202.156.216 <<EOF
-                      cd /home/ec2-user/therayu
-                      docker-compose down || true
-                      docker-compose up -d --build
-                    EOF
+                        ssh -o StrictHostKeyChecking=no ec2-user@44.202.156.216 <<EOF
+                          cd /home/ec2-user/therayu
+                          docker-compose down || true
+                          docker-compose up -d --build
+                        EOF
                     '''
                 }
             }
@@ -36,10 +36,10 @@ pipeline {
 
     post {
         success {
-            echo " Code changes deployed successfully."
+            echo "Code changes deployed successfully."
         }
         failure {
-            echo " Deployment failed."
+            echo "Deployment failed."
         }
     }
 }
