@@ -7,6 +7,14 @@ pipeline {
                 git url: 'https://github.com/ShahidKhan232/Therayu-cicd-pipeline.git', branch: 'main'
             }
         }
+        stage('Debug SSH Agent') {
+            steps {
+                sshagent(['ec2-user']) {
+                    sh 'echo "SSH Agent running"; ssh-add -l'
+                }
+            }
+        }
+
 
         stage('Transfer Latest Code to EC2') {
             steps {
