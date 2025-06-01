@@ -11,10 +11,10 @@ pipeline {
         stage('Transfer Latest Code to EC2') {
             steps {
                 sshagent(credentials:['ec2-ssh-key-id']) {
-                    sh """
+                    sh '''
                     ssh -o StrictHostKeyChecking=no ec2-user@3.85.62.197 'rm -rf ~/therayu'
                     scp -o StrictHostKeyChecking=no -r . ec2-user@3.85.62.197:/home/ec2-user/therayu
-                    """
+                    '''
                 }
             }
         }
@@ -22,13 +22,13 @@ pipeline {
         stage('Deploy with Docker Compose') {
             steps {
                 sshagent(credentials:['ec2-ssh-key-id']) {
-                    sh """
+                    sh '''
                     ssh -o StrictHostKeyChecking=no ec2-user@3.85.62.197 <<EOF
                       cd /home/ec2-user/therayu
                       docker-compose down || true
                       docker-compose up -d --build
                     EOF
-                    """
+                    '''
                 }
             }
         }
@@ -36,10 +36,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Code changes deployed successfully."
+            echo " Code changes deployed successfully."
         }
         failure {
-            echo "❌ Deployment failed."
+            echo " Deployment failed."
         }
     }
 }
