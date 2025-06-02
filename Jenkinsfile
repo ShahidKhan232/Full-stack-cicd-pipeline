@@ -3,14 +3,14 @@ pipeline {
 
     environment {
         REMOTE_USER = 'ec2-user'
-        REMOTE_HOST = '44.202.156.216'
-        REMOTE_PATH = '/home/ec2-user/therayu'
+        REMOTE_HOST = '98.80.76.194'
+        REMOTE_PATH = '/home/ec2-user/fullstack-app'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/ShahidKhan232/Therayu-cicd-pipeline.git', branch: 'main'
+                git url: 'https://github.com/ShahidKhan232/full-stack-cicd-pipeline.git', branch: 'main'
             }
         }
 
