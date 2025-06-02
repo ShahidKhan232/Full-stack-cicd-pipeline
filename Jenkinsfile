@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/ShahidKhan232/full-stack-cicd-pipeline.git', branch: 'main'
+                git url: 'https://github.com/ShahidKhan232/Full-stack-cicd-pipeline.git', branch: 'main'
             }
         }
 
