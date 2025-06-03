@@ -20,7 +20,7 @@ pipeline {
                     sh """
                         chmod 600 \$SSH_KEY
                         ssh -i \$SSH_KEY -o StrictHostKeyChecking=no \$REMOTE_USER@\$REMOTE_HOST "rm -rf \$REMOTE_PATH && mkdir -p \$REMOTE_PATH"
-                        scp -i \$SSH_KEY -o StrictHostKeyChecking=no -r . \$REMOTE_USER@\$REMOTE_HOST:\$REMOTE_PATH
+                        scp -i \$SSH_KEY -o StrictHostKeyChecking=no -r * \$REMOTE_USER@\$REMOTE_HOST:\$REMOTE_PATH
                     """
                 }
             }
