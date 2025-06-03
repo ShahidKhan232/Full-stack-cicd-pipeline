@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REMOTE_USER = 'ec2-user'
-        REMOTE_HOST = '98.84.150.67'
+        REMOTE_HOST = 'ec2-98-84-150-67.compute-1.amazonaws.com'
         REMOTE_PATH = '/home/ec2-user/fullstack-app'
     }
 
